@@ -1,3 +1,8 @@
+Public Function IsInArray(stringToBeFound As Variant, arr As Variant) As Boolean
+  IsInArray = (UBound(Filter(arr, stringToBeFound)) > -1)
+End Function
+
+
 Public Function getInd(ByVal name As String)
 Dim c As Range
 Set Target = ActiveWorkbook.Worksheets("SHIFTCALC")
@@ -17,6 +22,9 @@ End Function
 
 Sub ExtractSM0()
 
+Dim parts As Variant
+parts = Array("MH03", "MH06", "MH10", "MH11", "MH12", "MH13", "MH14", "MH15", "MH16", "MH18", "MH19", "MH92", "SR07", "SR09")
+
 Dim c As Range
 Dim otd(50)
 Dim sum(50)
@@ -35,7 +43,7 @@ For Each c In Source.Range("C2:C2000")
 	jVal = Source.Cells(c.Row, 10).Value
 	lVal = Source.Cells(c.Row, 12).Value
 
-	If hVal = 0 And lVal <> "3715" And lVal <> "" Then
+	If hVal = 0 And IsInArray(lVal, parts) Then
 	' Obtain column index for part (HFB)
 	col = getInd(lVal)
 	' Increase count of values stored for part
@@ -67,7 +75,7 @@ Next c
 
 Target.Cells.Sort _
 Key1:=Range("A1"), Order1:=xlAscending, _
-Key2:=Range("P1"), Order2:=xlAscending, _
+Key2:=Range("L1"), Order2:=xlAscending, _
 Orientation:=xlSortRows
 
 Target.Range("Q2:R50").Sort _
